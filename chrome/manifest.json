@@ -1,0 +1,40 @@
+{
+	"manifest_version": 2,
+	"name": "jAccount Captcha",
+	"version": "0.1.1",
+	"description": "jAccount Captcha",
+	"icons":
+	{
+		"16": "images/xiaohui.png",
+		"48": "images/xiaohui.png",
+		"128": "images/xiaohui.png"
+	},
+	"background":
+	{
+		"page": "html/background.html"
+	},
+	"browser_action": 
+	{
+		"default_icon": "images/xiaohui.png",
+		"default_title": "jAccount Captcha",
+		"default_popup": "html/popup.html"
+	},
+	"content_scripts": 
+	[
+		{
+			"matches": ["https://jaccount.sjtu.edu.cn/*"],
+			"js": ["js/jquery-3.4.1.min.js", "js/content_script.js"],
+			"css": [],
+			"run_at": "document_idle"
+		}
+	],
+	"permissions":
+	[
+		"contextMenus",
+		"tabs",
+		"notifications",
+		"webRequest",
+		"webRequestBlocking",
+		"storage"
+	]
+}
