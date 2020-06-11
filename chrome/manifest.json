@@ -3,38 +3,41 @@
 	"name": "jAccount Captcha",
 	"version": "0.1.1",
 	"description": "jAccount Captcha",
-	"icons":
-	{
-		"16": "images/xiaohui.png",
-		"48": "images/xiaohui.png",
-		"128": "images/xiaohui.png"
+	"icons": {
+	  "16": "assets/xiaohui.png",
+	  "48": "assets/xiaohui.png",
+	  "128": "assets/xiaohui.png"
 	},
-	"background":
-	{
-		"page": "html/background.html"
+	"background": {
+	  "page": "html/background.html"
 	},
-	"browser_action": 
-	{
-		"default_icon": "images/xiaohui.png",
-		"default_title": "jAccount Captcha",
-		"default_popup": "html/popup.html"
+	"browser_action": {
+	  "default_icon": "assets/xiaohui.png",
+	  "default_title": "jAccount Captcha",
+	  "default_popup": "html/popup.html"
 	},
-	"content_scripts": 
-	[
-		{
-			"matches": ["https://jaccount.sjtu.edu.cn/*"],
-			"js": ["js/jquery-3.4.1.min.js", "js/content_script.js"],
-			"css": [],
-			"run_at": "document_idle"
-		}
+	"content_scripts": [
+	  {
+		"matches": [
+		  "https://jaccount.sjtu.edu.cn/*"
+		],
+		"js": [
+		  "js/opencv.js",
+		  "js/tf.min.js",
+		  "js/content_script.js"
+		],
+		"css": [],
+		"run_at": "document_idle"
+	  }
 	],
-	"permissions":
-	[
-		"contextMenus",
-		"tabs",
-		"notifications",
-		"webRequest",
-		"webRequestBlocking",
-		"storage"
-	]
-}
+	"permissions": [
+	  "contextMenus",
+	  "tabs",
+	  "notifications",
+	  "webRequest",
+	  "webRequestBlocking",
+	  "storage",
+	  "unlimitedStorage"
+	],
+	"content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+  }
