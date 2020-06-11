@@ -1,41 +1,30 @@
 # jAccount Captcha Service
 
-> 1. 由于时间问题，该应用的使用模式为前后端分离。谷歌插件 jAccountCaptcha 负责将验证码图片传递给服务器，服务器负责验证码的识别，返回结果。
-> 2. 后端服务暂未部署成功，目前只能在本地自己玩耍（主要原因是在登录页面，谷歌插件向后端发送图片时，必须使用 https 协议，部署流程比较麻烦）。
-> 3. 前后端分离的模式给用户极大的不安全感（当然，我们的实现中插件只传递了图片信息）。理想情况下，我们应该将后端的服务移植到本地。可行的解决方案是在插件的实现中使用`tensorflow.js` `opencv.js`等前端脚本框架实现本地的识别。
-> 4. 该仓库只涉及验证码服务的发布，模型的训练等过程会在<https://github.com/ZinuoCai/jAccount-Captcha>中详细介绍。
+> 这是一款能够识别上海交通大学 jAccount 登录的谷歌插件。在识别模型的训练过程中，对于预处理后的单张图片（仅含单个字母）识别准确率达到99+%；对于验证码的识别准确率达到94.9%。
+>
+> 插件的制作过程主要使用了 **TensorFlow.js**，**OpenCV.js** 来读取和识别验证码。但是，由于 OpenCV.js 的使用结果与 Python 中的 OpenCV可能有所不同，最终实际应用环境的准确率大打折扣。后续工作中会对此加以改进。
 
-## 1. 部署方式
-
-先将仓库 clone 至本地 `git clone https://github.com/ZinuoCai/jAccount-Captcha-Service.git`。
-
-该仓库包含两个文件夹：
-
-- `chrome`：谷歌插件的实现；
-- `server`：后端服务的实现。
+## 部署方式
 
 ### 1.1 谷歌插件
 
-参考链接：How to install the unpacked extension in Chrome <https://webkul.com/blog/how-to-install-the-unpacked-extension-in-chrome/>
+1. 先将仓库 clone 至本地 `git clone https://github.com/ZinuoCai/jAccount-Captcha-Service.git`。其中 `chrome` 文件夹是插件包含的全部内容。
 
-### 1.2 服务端
+2. 将插件添加到谷歌浏览器中。
 
-服务端的代码主要包含两部分，服务器的搭建和验证码的识别。服务器使用的是 Flask 框架，图形的识别主要用到了 OpenCV 进行图片的预处理，以及 PyTorch 训练的 LeNet 模型进行图像的识别。在本地的测试中，预处理之后的图片，LeNet 进行单独测试时，准确率达到 99+%；对于整张图片的测试，整个框架的准确率达到 94.9%。
+   参考链接：How to install the unpacked extension in Chrome <https://webkul.com/blog/how-to-install-the-unpacked-extension-in-chrome/>
 
-首先进入到后端代码的文件夹。
+操作成功后，可以看到浏览器的右上角出现上海交通大学的校徽。
 
-`cd server`
+<img src="chrome/assets/xiaohui.png" alt="xiaohui" style="width:10%; margin-left: auto; margin-right: auto; display:block" />
 
-接着安装需要的依赖（为了保证环境的隔离性，可以考虑使用 Anaconda 进行 Python 环境的管理）。
+### 1.2 模型存储
 
-`pip install -r requirements.txt`
+在插件能够正常工作之前，我们需要手动加载模型和权值。它们都在 `chrome/assets/tfjs_lenet_model` 文件夹中。具体的操作流程如下：
 
-最后，启动服务。
+1. 打开 jAccount 的登陆界面，下拉至最下方，然后会看到三个按钮。
+2. 选择左面的按钮，添加`model.json`文件。
+3. 选择中间的按钮，添加`group1-shard1of1.bin`文件，这是模型的权值。
+4. 点击右边的按钮，加载模型，存储到浏览器的 localStorge 中。
 
-`python app.py`
-
-## 2. TODO
-
-- [ ] [近期] 将后端服务部署到云服务器上，使其能够应用到生产环境中。
-- [ ] [长期] 使用`tensorflow.js` `opencv.js`等将对验证码的识别操作整合。
-- [ ] [问题] 点击验证码刷新后不能及时更正验证码。
+操作成功后，会有弹出框提示模型存储成功。以后再次登陆网站时会发现验证码可以自动填充。
